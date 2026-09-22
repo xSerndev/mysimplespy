@@ -532,7 +532,7 @@ function clean()
     end
     if #remoteLogs > max then
         debugLog("CLEAN", "Cleaning logs, current count: " .. #remoteLogs .. ", max: " .. max)
-        for i = 100, #remoteLogs do
+        for i = 101, #remoteLogs do
             local v = remoteLogs[i]
             if typeof(v[1]) == "RBXScriptConnection" then
                 v[1]:Disconnect()
@@ -541,11 +541,16 @@ function clean()
                 v[2]:Destroy()
             end
         end
+        local newRemoteLogs = {}
         local newLogs = {}
         for i = 1, 100 do
-            table.insert(newLogs, remoteLogs[i])
+            table.insert(newRemoteLogs, remoteLogs[i])
+            if logs[i] then
+                table.insert(newLogs, logs[i])
+            end
         end
-        remoteLogs = newLogs
+        remoteLogs = newRemoteLogs
+        logs = newLogs
     end
 end
 
@@ -959,6 +964,12 @@ function newRemote(type, name, gen_script, remote, function_info, blocked)
     end
     remoteFrame.LayoutOrder = layoutOrderNum
     layoutOrderNum = layoutOrderNum - 1
+    if SearchBox and SearchBox.Text ~= "" then
+        local query = SearchBox.Text:lower()
+        if not string.find(displayName:lower(), query, 1, true) then
+            remoteFrame.Visible = false
+        end
+    end
     remoteFrame.Parent = LogList
     table.insert(remoteLogs, 1, {connect, remoteFrame})
     debugLog("NEW_REMOTE", "Remote added to LogList, total logs: " .. #logs .. ", remoteLogs: " .. #remoteLogs)
@@ -1207,7 +1218,7 @@ function i2p(i)
                     return i2p(player) .. ".Character" .. out
                 end
             else
-                if parent.Name:match("[%a_]+[%w+]*") ~= parent.Name then
+                if parent.Name:match("[%a_]+[%w_]*") ~= parent.Name then
                     out = '[' .. formatstr(parent.Name) .. ']' .. out
                 else
                     out = "." .. parent.Name .. out
@@ -1262,7 +1273,7 @@ function u2s(u)
     elseif typeof(u) == "NumberSequence" then
         -- NumberSequence
         local ret = "NumberSequence.new("
-        for i, v in pairs(u.KeyPoints) do
+        for i, v in pairs(u.Keypoints) do
             ret = ret .. tostring(v)
             if i < #u.Keypoints then
                 ret = ret .. ", "
@@ -1275,7 +1286,7 @@ function u2s(u)
     elseif typeof(u) == "ColorSequence" then
         -- ColorSequence
         local ret = "ColorSequence.new("
-        for i, v in pairs(u.KeyPoints) do
+        for i, v in pairs(u.Keypoints) do
             ret = ret .. "Color3.new(" .. tostring(v) .. ")"
             if i < #u.Keypoints then
                 ret = ret .. ", "
@@ -1617,6 +1628,14 @@ function toggleSpy()
             pcall(setreadonly, gm, false)
             gm.__namecall = original
         end
+        if typeof(hookfunction) == "function" then
+            if originalEvent then
+                pcall(hookfunction, Instance.new("RemoteEvent").FireServer, originalEvent)
+            end
+            if originalFunction then
+                pcall(hookfunction, Instance.new("RemoteFunction").InvokeServer, originalFunction)
+            end
+        end
         debugLog("TOGGLE", "Spy DISABLED")
     end
 end
@@ -1647,10 +1666,18 @@ function shutdown()
         schedulerconnect:Disconnect()
     end
     if hookmetamethod and original then
-        hookmetamethod(game, "__namecall", original)
+        pcall(hookmetamethod, game, "__namecall", original)
     elseif gm and original then
         pcall(setreadonly, gm, false)
         gm.__namecall = original
+    end
+    if typeof(hookfunction) == "function" then
+        if originalEvent then
+            pcall(hookfunction, Instance.new("RemoteEvent").FireServer, originalEvent)
+        end
+        if originalFunction then
+            pcall(hookfunction, Instance.new("RemoteFunction").InvokeServer, originalFunction)
+        end
     end
     SimpleSpy2:Destroy()
     _G.SimpleSpyExecuted = false
