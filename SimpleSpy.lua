@@ -84,8 +84,8 @@ Background.Name = "Background"
 Background.Parent = SimpleSpy2
 Background.BackgroundColor3 = Color3.fromRGB(15, 17, 23)
 Background.BackgroundTransparency = 0.05
-Background.Position = UDim2.new(0.5, -270, 0.5, -165)
-Background.Size = UDim2.new(0, 540, 0, 330)
+Background.Position = UDim2.new(0.5, -200, 0.5, -200)
+Background.Size = UDim2.new(0, 400, 0, 400)
 Background.ClipsDescendants = false
 addCorner(Background, 10)
 addStroke(Background, Color3.fromRGB(50, 58, 76), 1.5, 0.2)
@@ -94,7 +94,7 @@ TopBar.Name = "TopBar"
 TopBar.Parent = Background
 TopBar.BackgroundColor3 = Color3.fromRGB(22, 26, 36)
 TopBar.BorderSizePixel = 0
-TopBar.Size = UDim2.new(1, 0, 0, 30)
+TopBar.Size = UDim2.new(1, 0, 0, 28)
 addCorner(TopBar, 10)
 
 -- TopBar Title and Status
@@ -152,8 +152,8 @@ LeftPanel.Name = "LeftPanel"
 LeftPanel.Parent = Background
 LeftPanel.BackgroundColor3 = Color3.fromRGB(20, 23, 31)
 LeftPanel.BorderSizePixel = 0
-LeftPanel.Position = UDim2.new(0, 6, 0, 34)
-LeftPanel.Size = UDim2.new(0, 160, 1, -40)
+LeftPanel.Position = UDim2.new(0, 6, 0, 32)
+LeftPanel.Size = UDim2.new(0, 120, 1, -38)
 addCorner(LeftPanel, 8)
 addStroke(LeftPanel, Color3.fromRGB(38, 44, 58), 1, 0.4)
 
@@ -163,14 +163,14 @@ SearchBox.Name = "SearchBox"
 SearchBox.Parent = LeftPanel
 SearchBox.BackgroundColor3 = Color3.fromRGB(12, 14, 18)
 SearchBox.BorderSizePixel = 0
-SearchBox.Position = UDim2.new(0, 6, 0, 6)
-SearchBox.Size = UDim2.new(1, -12, 0, 24)
+SearchBox.Position = UDim2.new(0, 4, 0, 4)
+SearchBox.Size = UDim2.new(1, -8, 0, 22)
 SearchBox.Font = Enum.Font.Gotham
 SearchBox.PlaceholderText = "🔍 Search remotes..."
 SearchBox.PlaceholderColor3 = Color3.fromRGB(110, 120, 140)
 SearchBox.Text = ""
 SearchBox.TextColor3 = Color3.fromRGB(230, 235, 245)
-SearchBox.TextSize = 11
+SearchBox.TextSize = 10
 SearchBox.TextXAlignment = Enum.TextXAlignment.Left
 SearchBox.ClearTextOnFocus = false
 addCorner(SearchBox, 5)
@@ -183,8 +183,8 @@ LogList.Active = true
 LogList.BackgroundColor3 = Color3.new(1, 1, 1)
 LogList.BackgroundTransparency = 1
 LogList.BorderSizePixel = 0
-LogList.Position = UDim2.new(0, 4, 0, 36)
-LogList.Size = UDim2.new(1, -8, 1, -42)
+LogList.Position = UDim2.new(0, 2, 0, 28)
+LogList.Size = UDim2.new(1, -4, 1, -32)
 LogList.CanvasSize = UDim2.new(0, 0, 0, 0)
 LogList.ScrollBarThickness = 3
 LogList.ScrollBarImageColor3 = Color3.fromRGB(60, 70, 90)
@@ -192,13 +192,13 @@ LogList.ScrollBarImageColor3 = Color3.fromRGB(60, 70, 90)
 UIListLayout.Parent = LogList
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 4)
+UIListLayout.Padding = UDim.new(0, 2)
 
 RemoteTemplate.Name = "RemoteTemplate"
 RemoteTemplate.Parent = LogList
 RemoteTemplate.BackgroundColor3 = Color3.fromRGB(28, 33, 44)
 RemoteTemplate.BackgroundTransparency = 0
-RemoteTemplate.Size = UDim2.new(1, -2, 0, 24)
+RemoteTemplate.Size = UDim2.new(1, -2, 0, 20)
 addCorner(RemoteTemplate, 5)
 addStroke(RemoteTemplate, Color3.fromRGB(42, 50, 66), 1, 0.4)
 
@@ -206,8 +206,8 @@ ColorBar.Name = "ColorBar"
 ColorBar.Parent = RemoteTemplate
 ColorBar.BackgroundColor3 = Color3.fromRGB(255, 183, 3)
 ColorBar.BorderSizePixel = 0
-ColorBar.Position = UDim2.new(0, 4, 0.5, -8)
-ColorBar.Size = UDim2.new(0, 4, 0, 16)
+ColorBar.Position = UDim2.new(0, 3, 0.5, -7)
+ColorBar.Size = UDim2.new(0, 3, 0, 14)
 ColorBar.ZIndex = 2
 addCorner(ColorBar, 2)
 
@@ -215,13 +215,13 @@ Text.Name = "Text"
 Text.Parent = RemoteTemplate
 Text.BackgroundColor3 = Color3.new(1, 1, 1)
 Text.BackgroundTransparency = 1
-Text.Position = UDim2.new(0, 14, 0, 0)
-Text.Size = UDim2.new(1, -16, 1, 0)
+Text.Position = UDim2.new(0, 10, 0, 0)
+Text.Size = UDim2.new(1, -12, 1, 0)
 Text.ZIndex = 2
 Text.Font = Enum.Font.GothamMedium
 Text.Text = "TEXT"
 Text.TextColor3 = Color3.fromRGB(230, 235, 245)
-Text.TextSize = 11
+Text.TextSize = 10
 Text.TextXAlignment = Enum.TextXAlignment.Left
 
 Button.Name = "Button"
@@ -239,8 +239,8 @@ RightPanel.Name = "RightPanel"
 RightPanel.Parent = Background
 RightPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 28)
 RightPanel.BorderSizePixel = 0
-RightPanel.Position = UDim2.new(0, 172, 0, 34)
-RightPanel.Size = UDim2.new(1, -178, 1, -40)
+RightPanel.Position = UDim2.new(0, 132, 0, 32)
+RightPanel.Size = UDim2.new(1, -138, 1, -38)
 addCorner(RightPanel, 8)
 addStroke(RightPanel, Color3.fromRGB(38, 44, 58), 1, 0.4)
 
@@ -248,8 +248,8 @@ CodeBox.Name = "CodeBox"
 CodeBox.Parent = RightPanel
 CodeBox.BackgroundColor3 = Color3.fromRGB(10, 12, 16)
 CodeBox.BorderSizePixel = 0
-CodeBox.Position = UDim2.new(0, 6, 0, 6)
-CodeBox.Size = UDim2.new(1, -12, 0, 148)
+CodeBox.Position = UDim2.new(0, 4, 0, 4)
+CodeBox.Size = UDim2.new(1, -8, 0, 170)
 addCorner(CodeBox, 6)
 addStroke(CodeBox, Color3.fromRGB(35, 42, 56), 1, 0.3)
 
@@ -257,8 +257,8 @@ ScrollingFrame.Parent = RightPanel
 ScrollingFrame.Active = true
 ScrollingFrame.BackgroundColor3 = Color3.new(1, 1, 1)
 ScrollingFrame.BackgroundTransparency = 1
-ScrollingFrame.Position = UDim2.new(0, 6, 0, 160)
-ScrollingFrame.Size = UDim2.new(1, -12, 1, -166)
+ScrollingFrame.Position = UDim2.new(0, 4, 0, 178)
+ScrollingFrame.Size = UDim2.new(1, -8, 1, -182)
 ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 ScrollingFrame.ScrollBarThickness = 3
 ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 70, 90)
@@ -266,14 +266,14 @@ ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 70, 90)
 UIGridLayout.Parent = ScrollingFrame
 UIGridLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIGridLayout.CellPadding = UDim2.new(0, 5, 0, 5)
-UIGridLayout.CellSize = UDim2.new(0, 108, 0, 25)
+UIGridLayout.CellPadding = UDim2.new(0, 3, 0, 3)
+UIGridLayout.CellSize = UDim2.new(0, 80, 0, 22)
 
 FunctionTemplate.Name = "FunctionTemplate"
 FunctionTemplate.Parent = ScrollingFrame
 FunctionTemplate.BackgroundColor3 = Color3.fromRGB(28, 34, 48)
 FunctionTemplate.BackgroundTransparency = 0
-FunctionTemplate.Size = UDim2.new(0, 108, 0, 25)
+FunctionTemplate.Size = UDim2.new(0, 80, 0, 22)
 addCorner(FunctionTemplate, 5)
 addStroke(FunctionTemplate, Color3.fromRGB(48, 56, 76), 1, 0.3)
 
@@ -281,8 +281,8 @@ ColorBar_2.Name = "ColorBar"
 ColorBar_2.Parent = FunctionTemplate
 ColorBar_2.BackgroundColor3 = Color3.fromRGB(0, 242, 254)
 ColorBar_2.BorderSizePixel = 0
-ColorBar_2.Position = UDim2.new(0, 4, 0.5, -8)
-ColorBar_2.Size = UDim2.new(0, 3, 0, 16)
+ColorBar_2.Position = UDim2.new(0, 3, 0.5, -7)
+ColorBar_2.Size = UDim2.new(0, 3, 0, 14)
 ColorBar_2.ZIndex = 3
 addCorner(ColorBar_2, 2)
 
@@ -296,7 +296,7 @@ Text_2.ZIndex = 2
 Text_2.Font = Enum.Font.GothamMedium
 Text_2.Text = "TEXT"
 Text_2.TextColor3 = Color3.fromRGB(220, 230, 245)
-Text_2.TextSize = 11
+Text_2.TextSize = 9
 Text_2.TextXAlignment = Enum.TextXAlignment.Center
 
 Button_2.Name = "Button"
@@ -570,18 +570,18 @@ function bringBackOnResize()
     local currentX = Background.AbsolutePosition.X
     local currentY = Background.AbsolutePosition.Y
     local viewportSize = workspace.CurrentCamera.ViewportSize
-    if (currentX < 0) or (currentX > (viewportSize.X - (sideClosed and 131 or 450))) then
+    if (currentX < 0) or (currentX > (viewportSize.X - (sideClosed and 132 or 400))) then
         if currentX < 0 then
             currentX = 0
         else
-            currentX = viewportSize.X - (sideClosed and 131 or 450)
+            currentX = viewportSize.X - (sideClosed and 132 or 400)
         end
     end
-    if (currentY < 0) or (currentY > (viewportSize.Y - (closed and 19 or 268) - 35)) then
+    if (currentY < 0) or (currentY > (viewportSize.Y - (closed and 28 or 370) - 35)) then
         if currentY < 0 then
             currentY = 0
         else
-            currentY = viewportSize.Y - (closed and 19 or 268) - 35
+            currentY = viewportSize.Y - (closed and 28 or 370) - 35
         end
     end
     TweenService.Create(TweenService, Background, TweenInfo.new(0.1), {Position = UDim2.new(0, currentX, 0, currentY)}):Play()
@@ -601,18 +601,18 @@ function onBarInput(input)
                     local currentX = (offset + newPos).X
                     local currentY = (offset + newPos).Y
                     local viewportSize = workspace.CurrentCamera.ViewportSize
-                    if (currentX < 0 and currentX < currentPos.X) or (currentX > (viewportSize.X - (sideClosed and 131 or 450)) and currentX > currentPos.X) then
+                    if (currentX < 0 and currentX < currentPos.X) or (currentX > (viewportSize.X - (sideClosed and 132 or 400)) and currentX > currentPos.X) then
                         if currentX < 0 then
                             currentX = 0
                         else
-                            currentX = viewportSize.X - (sideClosed and 131 or 450)
+                            currentX = viewportSize.X - (sideClosed and 132 or 400)
                         end
                     end
-                    if (currentY < 0 and currentY < currentPos.Y) or (currentY > (viewportSize.Y - (closed and 19 or 268) - 35) and currentY > currentPos.Y) then
+                    if (currentY < 0 and currentY < currentPos.Y) or (currentY > (viewportSize.Y - (closed and 28 or 370) - 35) and currentY > currentPos.Y) then
                         if currentY < 0 then
                             currentY = 0
                         else
-                            currentY = viewportSize.Y - (closed and 19 or 268) - 35
+                            currentY = viewportSize.Y - (closed and 28 or 370) - 35
                         end
                     end
                     currentPos = Vector2.new(currentX, currentY)
@@ -688,12 +688,12 @@ function toggleMinimize(override)
             toggleSideTray(true)
         end
         LeftPanel.Visible = true
-        TweenService:Create(LeftPanel, TweenInfo.new(0.5), {Size = UDim2.new(0, 131, 0, 0)}):Play()
+        TweenService:Create(LeftPanel, TweenInfo.new(0.5), {Size = UDim2.new(0, 120, 0, 0)}):Play()
         wait(0.5)
         remotesFadeIn = fadeOut(LeftPanel:GetDescendants())
         wait(0.5)
     else
-        TweenService:Create(LeftPanel, TweenInfo.new(0.5), {Size = UDim2.new(0, 131, 0, 249)}):Play()
+        TweenService:Create(LeftPanel, TweenInfo.new(0.5), {Size = UDim2.new(0, 120, 1, -38)}):Play()
         wait(0.5)
         if remotesFadeIn then
             remotesFadeIn()
@@ -714,8 +714,8 @@ function toggleSideTray(override)
     if sideClosed then
         rightFadeIn = fadeOut(RightPanel:GetDescendants())
         wait(0.5)
-        TweenService:Create(RightPanel, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 249)}):Play()
-        TweenService:Create(TopBar, TweenInfo.new(0.5), {Size = UDim2.new(0, 131, 0, 19)}):Play()
+        TweenService:Create(RightPanel, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 1, -38)}):Play()
+        TweenService:Create(TopBar, TweenInfo.new(0.5), {Size = UDim2.new(0, 132, 0, 28)}):Play()
         wait(0.5)
         RightPanel.Visible = false
     else
@@ -723,8 +723,8 @@ function toggleSideTray(override)
             toggleMinimize(true)
         end
         RightPanel.Visible = true
-        TweenService:Create(RightPanel, TweenInfo.new(0.5), {Size = UDim2.new(0, 319, 0, 249)}):Play()
-        TweenService:Create(TopBar, TweenInfo.new(0.5), {Size = UDim2.new(0, 450, 0, 19)}):Play()
+        TweenService:Create(RightPanel, TweenInfo.new(0.5), {Size = UDim2.new(1, -138, 1, -38)}):Play()
+        TweenService:Create(TopBar, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 28)}):Play()
         wait(0.5)
         if rightFadeIn then
             rightFadeIn()
@@ -1384,7 +1384,7 @@ function schedule(f, ...)
     table.insert(scheduled, {f, ...})
 end
 
---- the big (well tbh small now) boi task scheduler himself, handles p much anything as quicc as possible
+--- Task scheduler - processes ALL pending items per heartbeat frame
 function taskscheduler()
     if not toggle then
         if #scheduled > 0 then
@@ -1393,20 +1393,24 @@ function taskscheduler()
         scheduled = {}
         return
     end
-    if #scheduled > 1000 then
-        debugLog("SCHEDULER", "WARNING: Queue overflow, dropping oldest event (queue size: " .. #scheduled .. ")")
-        table.remove(scheduled, #scheduled)
-    end
-    if #scheduled > 0 then
-        local currentf = scheduled[1]
-        table.remove(scheduled, 1)
+    -- Swap table to prevent infinite loops from items scheduling new items
+    local toProcess = scheduled
+    scheduled = {}
+    local count = 0
+    for _, currentf in ipairs(toProcess) do
+        count = count + 1
+        if count > 200 then break end -- safety limit per frame
         if type(currentf) == "table" and type(currentf[1]) == "function" then
             local success, err = pcall(unpack(currentf))
             if not success then
-                debugLog("SCHEDULER", "ERROR executing scheduled task: " .. tostring(err))
+                debugLog("SCHEDULER", "ERROR: " .. tostring(err))
+                -- Show error visibly in codebox
+                pcall(function()
+                    if codebox then
+                        codebox:setRaw("-- SerndevRBLXSpyV1 PIPELINE ERROR --\n-- " .. tostring(err) .. "\n-- Check dev console for details")
+                    end
+                end)
             end
-        else
-            debugLog("SCHEDULER", "WARNING: Invalid scheduled item type: " .. tostring(type(currentf)))
         end
     end
 end
@@ -1452,37 +1456,43 @@ end
 
 local newnamecall = newcclosure(function(self, ...)
     local args = {...}
-    local methodName = getnamecallmethod()
-    -- Fallback: detect method from instance type if getnamecallmethod returns empty/nil
-    if (not methodName or methodName == "") and typeof(self) == "Instance" then
-        if self:IsA("RemoteEvent") then
-            methodName = "FireServer"
-        elseif self:IsA("RemoteFunction") then
-            methodName = "InvokeServer"
-        end
-    end
-    local func
-    if debug and debug.getinfo then
-        pcall(function()
-            func = debug.getinfo(3).func
-        end)
-    end
-    if methodName and typeof(methodName) == "string" and methodName ~= "" then
-        local lowerMethod = methodName:lower()
-        if (lowerMethod == "invokeserver" or lowerMethod == "fireserver") and typeof(self) == "Instance" then
-            local remote = self
-            local fullArgs = {self, unpack(args)}
-            coroutine.wrap(function()
-                schedule(remoteHandler, false, methodName, remote, fullArgs, func)
-            end)()
-            if blocklist[remote] or blocklist[remote.Name] then
-                return nil
+    -- Wrap entire interception in pcall to prevent breaking the hook
+    local interceptOk, interceptErr = pcall(function()
+        local methodName = getnamecallmethod()
+        -- Fallback: detect method from instance type
+        if (not methodName or methodName == "") and typeof(self) == "Instance" then
+            if self:IsA("RemoteEvent") then
+                methodName = "FireServer"
+            elseif self:IsA("RemoteFunction") then
+                methodName = "InvokeServer"
             end
         end
+        if methodName and typeof(methodName) == "string" and methodName ~= "" then
+            local lowerMethod = methodName:lower()
+            if (lowerMethod == "invokeserver" or lowerMethod == "fireserver") and typeof(self) == "Instance" then
+                -- Schedule directly (no coroutine.wrap needed)
+                schedule(remoteHandler, false, methodName, self, {self, unpack(args)}, nil)
+            end
+        end
+    end)
+    if not interceptOk then
+        debugLog("HOOK", "Namecall hook error: " .. tostring(interceptErr))
     end
-    if setnamecallmethod and methodName and methodName ~= "" then
-        setnamecallmethod(methodName)
-    end
+    -- Block check (separate pcall so hook always continues)
+    local shouldBlock = false
+    pcall(function()
+        if typeof(self) == "Instance" and (self:IsA("RemoteEvent") or self:IsA("RemoteFunction")) then
+            shouldBlock = blocklist[self] or blocklist[self.Name]
+        end
+    end)
+    if shouldBlock then return nil end
+    -- Restore namecall method and call original
+    pcall(function()
+        local mn = getnamecallmethod()
+        if setnamecallmethod and mn and mn ~= "" then
+            setnamecallmethod(mn)
+        end
+    end)
     return original(self, ...)
 end)
 
@@ -1643,20 +1653,24 @@ if not _G.SimpleSpyExecuted then
         end)()
         schedulerconnect = RunService.Heartbeat:Connect(taskscheduler)
         debugLog("INIT", "SerndevRBLXSpyV1 initialized successfully, toggle=" .. tostring(toggle))
-        -- Show startup status in codebox so user can see if spy is active
-        local statusLines = {}
-        table.insert(statusLines, "-- SerndevRBLXSpyV1 Status Report --")
-        table.insert(statusLines, "-- Spy Active: " .. tostring(toggle))
-        table.insert(statusLines, "-- hookmetamethod: " .. tostring(hookmetamethod ~= nil))
-        table.insert(statusLines, "-- getrawmetatable: " .. tostring(getrawmetatable ~= nil))
-        table.insert(statusLines, "-- hookfunction: " .. tostring(typeof(hookfunction) == "function"))
-        table.insert(statusLines, "-- getnamecallmethod: " .. tostring(getnamecallmethod ~= nil and tostring(getnamecallmethod) ~= tostring(function() return "" end)))
-        table.insert(statusLines, "-- newcclosure: " .. tostring(newcclosure ~= nil))
-        table.insert(statusLines, "-- original namecall saved: " .. tostring(original ~= nil))
-        table.insert(statusLines, "--")
-        table.insert(statusLines, "-- Waiting for remote events...")
-        table.insert(statusLines, "-- Enable debug: _G.SimpleSpyDebug = true")
-        codebox:setRaw(table.concat(statusLines, "\n"))
+        -- Show startup status
+        codebox:setRaw("-- SerndevRBLXSpyV1 Active --\n-- Waiting for remote events...")
+        -- Auto-test: directly inject a test event to verify the display pipeline works
+        coroutine.wrap(function()
+            wait(2)
+            debugLog("TEST", "Running auto-test...")
+            local testOk, testErr = pcall(function()
+                newRemote("event", "[Test] Pipeline OK", "-- SerndevRBLXSpyV1 test passed!\n-- Events are working. Real remotes will appear here.", nil, nil, false)
+            end)
+            if testOk then
+                debugLog("TEST", "Auto-test PASSED")
+            else
+                debugLog("TEST", "Auto-test FAILED: " .. tostring(testErr))
+                pcall(function()
+                    codebox:setRaw("-- AUTO-TEST FAILED --\n-- Error: " .. tostring(testErr))
+                end)
+            end
+        end)()
     end)
     if succeeded then
         _G.SimpleSpyExecuted = true
