@@ -1456,9 +1456,9 @@ end
 
 local newnamecall = newcclosure(function(self, ...)
     local args = {...}
-    -- Wrap entire interception in pcall to prevent breaking the hook
+    local methodName = getnamecallmethod()
+    
     local interceptOk, interceptErr = pcall(function()
-        local methodName = getnamecallmethod()
         -- Fallback: detect method from instance type
         if (not methodName or methodName == "") and typeof(self) == "Instance" then
             if self.ClassName == "RemoteEvent" then
@@ -1470,7 +1470,6 @@ local newnamecall = newcclosure(function(self, ...)
         if methodName and typeof(methodName) == "string" and methodName ~= "" then
             local lowerMethod = methodName:lower()
             if (lowerMethod == "invokeserver" or lowerMethod == "fireserver") and typeof(self) == "Instance" then
-                -- Schedule directly (no coroutine.wrap needed)
                 schedule(remoteHandler, false, methodName, self, {self, unpack(args)}, nil)
             end
         end
@@ -1478,7 +1477,7 @@ local newnamecall = newcclosure(function(self, ...)
     if not interceptOk then
         debugLog("HOOK", "Namecall hook error: " .. tostring(interceptErr))
     end
-    -- Block check (separate pcall so hook always continues)
+    
     local shouldBlock = false
     pcall(function()
         if typeof(self) == "Instance" and (self.ClassName == "RemoteEvent" or self.ClassName == "RemoteFunction") then
@@ -1486,13 +1485,10 @@ local newnamecall = newcclosure(function(self, ...)
         end
     end)
     if shouldBlock then return nil end
-    -- Restore namecall method and call original
-    pcall(function()
-        local mn = getnamecallmethod()
-        if setnamecallmethod and mn and mn ~= "" then
-            setnamecallmethod(mn)
-        end
-    end)
+    
+    if setnamecallmethod and methodName and methodName ~= "" then
+        setnamecallmethod(methodName)
+    end
     return original(self, ...)
 end)
 
