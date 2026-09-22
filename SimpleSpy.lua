@@ -46,6 +46,7 @@ local MinimizeButton = Instance.new("TextButton")
 local ImageLabel_3 = Instance.new("ImageLabel")
 local ToolTip = Instance.new("Frame")
 local TextLabel = Instance.new("TextLabel")
+local ResizeHandle = Instance.new("TextButton")
 
 -- Helper styling functions
 local function addCorner(parent, radius)
@@ -84,11 +85,24 @@ Background.Name = "Background"
 Background.Parent = SimpleSpy2
 Background.BackgroundColor3 = Color3.fromRGB(15, 17, 23)
 Background.BackgroundTransparency = 0.05
-Background.Position = UDim2.new(0.5, -200, 0.5, -200)
-Background.Size = UDim2.new(0, 400, 0, 400)
+Background.Position = UDim2.new(0.5, -300, 0.5, -300)
+Background.Size = UDim2.new(0, 600, 0, 600)
 Background.ClipsDescendants = false
 addCorner(Background, 10)
 addStroke(Background, Color3.fromRGB(50, 58, 76), 1.5, 0.2)
+
+ResizeHandle.Name = "ResizeHandle"
+ResizeHandle.Parent = Background
+ResizeHandle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ResizeHandle.BackgroundTransparency = 1
+ResizeHandle.Position = UDim2.new(1, -16, 1, -16)
+ResizeHandle.Size = UDim2.new(0, 16, 0, 16)
+ResizeHandle.Font = Enum.Font.GothamBold
+ResizeHandle.Text = "◢"
+ResizeHandle.TextColor3 = Color3.fromRGB(80, 95, 120)
+ResizeHandle.TextSize = 12
+ResizeHandle.ZIndex = 20
+ResizeHandle.AutoButtonColor = false
 
 TopBar.Name = "TopBar"
 TopBar.Parent = Background
@@ -249,7 +263,7 @@ CodeBox.Parent = RightPanel
 CodeBox.BackgroundColor3 = Color3.fromRGB(10, 12, 16)
 CodeBox.BorderSizePixel = 0
 CodeBox.Position = UDim2.new(0, 4, 0, 4)
-CodeBox.Size = UDim2.new(1, -8, 0, 170)
+CodeBox.Size = UDim2.new(1, -8, 1, -135)
 addCorner(CodeBox, 6)
 addStroke(CodeBox, Color3.fromRGB(35, 42, 56), 1, 0.3)
 
@@ -257,8 +271,8 @@ ScrollingFrame.Parent = RightPanel
 ScrollingFrame.Active = true
 ScrollingFrame.BackgroundColor3 = Color3.new(1, 1, 1)
 ScrollingFrame.BackgroundTransparency = 1
-ScrollingFrame.Position = UDim2.new(0, 4, 0, 178)
-ScrollingFrame.Size = UDim2.new(1, -8, 1, -182)
+ScrollingFrame.Position = UDim2.new(0, 4, 1, -127)
+ScrollingFrame.Size = UDim2.new(1, -8, 0, 123)
 ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 ScrollingFrame.ScrollBarThickness = 3
 ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(60, 70, 90)
@@ -451,6 +465,21 @@ function SimpleSpy:ClearDebugLog()
     debugLogHistory = {}
 end
 
+--- Loads DevX Explorer
+function SimpleSpy:LoadDevX()
+    debugLog("DEVX", "Loading DevX Explorer...")
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+    end)
+    if not success then
+        debugLog("DEVX", "Primary DevX URL failed, attempting fallback...")
+        success, err = pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Babyhamsta/RBLX_Games/main/Universal/BypassedDarkDexV3.lua"))()
+        end)
+    end
+    return success, err
+end
+
 -- functions
 
 --- Converts arguments to a string and generates code that calls the specified method with them, recommended to be used in conjunction with ValueToString (method must be a string, e.g. `game:GetService("ReplicatedStorage").Remote:FireServer`)
@@ -570,18 +599,20 @@ function bringBackOnResize()
     local currentX = Background.AbsolutePosition.X
     local currentY = Background.AbsolutePosition.Y
     local viewportSize = workspace.CurrentCamera.ViewportSize
-    if (currentX < 0) or (currentX > (viewportSize.X - (sideClosed and 132 or 400))) then
+    local bgWidth = Background.AbsoluteSize.X
+    local bgHeight = Background.AbsoluteSize.Y
+    if (currentX < 0) or (currentX > (viewportSize.X - (sideClosed and 132 or bgWidth))) then
         if currentX < 0 then
             currentX = 0
         else
-            currentX = viewportSize.X - (sideClosed and 132 or 400)
+            currentX = viewportSize.X - (sideClosed and 132 or bgWidth)
         end
     end
-    if (currentY < 0) or (currentY > (viewportSize.Y - (closed and 28 or 370) - 35)) then
+    if (currentY < 0) or (currentY > (viewportSize.Y - (closed and 28 or bgHeight) - 35)) then
         if currentY < 0 then
             currentY = 0
         else
-            currentY = viewportSize.Y - (closed and 28 or 370) - 35
+            currentY = viewportSize.Y - (closed and 28 or bgHeight) - 35
         end
     end
     TweenService.Create(TweenService, Background, TweenInfo.new(0.1), {Position = UDim2.new(0, currentX, 0, currentY)}):Play()
@@ -601,18 +632,20 @@ function onBarInput(input)
                     local currentX = (offset + newPos).X
                     local currentY = (offset + newPos).Y
                     local viewportSize = workspace.CurrentCamera.ViewportSize
-                    if (currentX < 0 and currentX < currentPos.X) or (currentX > (viewportSize.X - (sideClosed and 132 or 400)) and currentX > currentPos.X) then
+                    local bgWidth = Background.AbsoluteSize.X
+                    local bgHeight = Background.AbsoluteSize.Y
+                    if (currentX < 0 and currentX < currentPos.X) or (currentX > (viewportSize.X - (sideClosed and 132 or bgWidth)) and currentX > currentPos.X) then
                         if currentX < 0 then
                             currentX = 0
                         else
-                            currentX = viewportSize.X - (sideClosed and 132 or 400)
+                            currentX = viewportSize.X - (sideClosed and 132 or bgWidth)
                         end
                     end
-                    if (currentY < 0 and currentY < currentPos.Y) or (currentY > (viewportSize.Y - (closed and 28 or 370) - 35) and currentY > currentPos.Y) then
+                    if (currentY < 0 and currentY < currentPos.Y) or (currentY > (viewportSize.Y - (closed and 28 or bgHeight) - 35) and currentY > currentPos.Y) then
                         if currentY < 0 then
                             currentY = 0
                         else
-                            currentY = viewportSize.Y - (closed and 28 or 370) - 35
+                            currentY = viewportSize.Y - (closed and 28 or bgHeight) - 35
                         end
                     end
                     currentPos = Vector2.new(currentX, currentY)
@@ -624,6 +657,26 @@ function onBarInput(input)
                 end
             end
         )
+    end
+end
+
+--- Resizes gui (so long as mouse is held down on the resize handle)
+function onResizeInput(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        local startMousePos = UserInputService:GetMouseLocation()
+        local startSize = Background.AbsoluteSize
+        local minSize = Vector2.new(350, 250)
+        RunService:BindToRenderStep("resize", 1, function()
+            local currentMousePos = UserInputService:GetMouseLocation()
+            local delta = currentMousePos - startMousePos
+            local viewportSize = workspace.CurrentCamera.ViewportSize
+            local newX = math.clamp(startSize.X + delta.X, minSize.X, viewportSize.X)
+            local newY = math.clamp(startSize.Y + delta.Y, minSize.Y, viewportSize.Y - 35)
+            Background.Size = UDim2.new(0, newX, 0, newY)
+            if not UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
+                RunService:UnbindFromRenderStep("resize")
+            end
+        end)
     end
 end
 
@@ -762,8 +815,8 @@ function toggleMaximize()
             TweenService:Create(disable, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
             wait(0.5)
             disable:Destroy()
-            CodeBox.Size = UDim2.new(1, 0, 0.5, 0)
-            CodeBox.Position = UDim2.new(0, 0, 0, 0)
+            CodeBox.Size = UDim2.new(1, -8, 1, -135)
+            CodeBox.Position = UDim2.new(0, 4, 0, 4)
             CodeBox.ZIndex = 0
             maximized = false
         end)
@@ -859,9 +912,7 @@ function newButton(name, description, onClick)
         makeToolTip(false)
     end)
     button.Button.MouseButton1Click:Connect(function(...)
-        if selected then
-            onClick(button, ...)
-        end
+        onClick(button, ...)
     end)
     button.Parent = ScrollingFrame
     updateFunctionCanvas()
@@ -1633,6 +1684,7 @@ if not _G.SimpleSpyExecuted then
             end
         end)
         TopBar.InputBegan:Connect(onBarInput)
+        ResizeHandle.InputBegan:Connect(onResizeInput)
         MinimizeButton.MouseButton1Click:Connect(toggleMinimize)
         MaximizeButton.MouseButton1Click:Connect(toggleSideTray)
         Simple.MouseButton1Click:Connect(onToggleButtonClick)
@@ -1727,6 +1779,7 @@ newButton(
     "Copy Remote",
     "Click to copy the path of the remote",
     function(button)
+        if not selected or not selected.Remote then return end
         local orText = "Click to copy the path of the remote"
         setclipboard(v2s(selected.Remote))
         button.Text = "Copied!"
@@ -1764,6 +1817,7 @@ newButton(
     "Function Info",
     "Click to view calling function information",
     function(button)
+        if not selected then return end
         local orText = "Click to view calling function information"
         if selected.Function then
             codebox:setRaw("-- Calling function info\n-- Generated by SerndevRBLXSpyV1\n\n" .. tostring(selected.Function))
@@ -1800,6 +1854,7 @@ newButton(
     "Exclude (i)",
     "Click to exclude this Remote",
     function(button)
+        if not selected or not selected.Remote then return end
         local orText = "Click to exclude this Remote"
         blacklist[selected.Remote] = true
         TextLabel.Text = "Excluded!"
@@ -1813,6 +1868,7 @@ newButton(
     "Exclude (n)",
     "Click to exclude all remotes with this name",
     function(button)
+        if not selected or not selected.Name then return end
         local orText = "Click to exclude all remotes with this name"
         blacklist[selected.Name] = true
         TextLabel.Text = "Excluded!"
@@ -1839,6 +1895,7 @@ newButton(
     "Block (i)",
     "Click to stop this remote from firing",
     function(button)
+        if not selected or not selected.Remote then return end
         local orText = "Click to stop this remote from firing"
         blocklist[selected.Remote] = true
         TextLabel.Text = "Excluded!"
@@ -1852,6 +1909,7 @@ newButton(
     "Block (n)",
     "Click to stop remotes with this name from firing",
     function(button)
+        if not selected or not selected.Name then return end
         local orText = "Click to stop remotes with this name from firing"
         blocklist[selected.Name] = true
         TextLabel.Text = "Excluded!"
@@ -1868,6 +1926,25 @@ newButton(
         local orText = "Click to stop blocking remotes"
         blocklist = {}
         TextLabel.Text = "Blocklist cleared!"
+        wait(3)
+        TextLabel.Text = orText
+    end
+)
+
+--- Loads DevX Explorer
+newButton(
+    "DevX",
+    "Click to load DevX Explorer",
+    function(button)
+        local orText = "Click to load DevX Explorer"
+        TextLabel.Text = "Loading DevX..."
+        local success, err = SimpleSpy:LoadDevX()
+        if success then
+            TextLabel.Text = "DevX loaded!"
+        else
+            warn("DevX load error:", err)
+            TextLabel.Text = "DevX load error!"
+        end
         wait(3)
         TextLabel.Text = orText
     end
