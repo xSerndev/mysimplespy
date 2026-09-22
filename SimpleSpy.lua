@@ -1461,9 +1461,9 @@ local newnamecall = newcclosure(function(self, ...)
         local methodName = getnamecallmethod()
         -- Fallback: detect method from instance type
         if (not methodName or methodName == "") and typeof(self) == "Instance" then
-            if self:IsA("RemoteEvent") then
+            if self.ClassName == "RemoteEvent" then
                 methodName = "FireServer"
-            elseif self:IsA("RemoteFunction") then
+            elseif self.ClassName == "RemoteFunction" then
                 methodName = "InvokeServer"
             end
         end
@@ -1481,7 +1481,7 @@ local newnamecall = newcclosure(function(self, ...)
     -- Block check (separate pcall so hook always continues)
     local shouldBlock = false
     pcall(function()
-        if typeof(self) == "Instance" and (self:IsA("RemoteEvent") or self:IsA("RemoteFunction")) then
+        if typeof(self) == "Instance" and (self.ClassName == "RemoteEvent" or self.ClassName == "RemoteFunction") then
             shouldBlock = blocklist[self] or blocklist[self.Name]
         end
     end)
