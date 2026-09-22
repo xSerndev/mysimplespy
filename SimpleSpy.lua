@@ -1421,16 +1421,15 @@ function remoteHandler(isHookFunction, methodName, remote, args, func)
         pcall(function() functionInfo.constants = debug.getconstants(func) end)
         pcall(function() functionInfoStr = v2v{functionInfo = functionInfo} end)
     end
+    -- Namecall path passes {self, ...args} so we need to strip self (index 1)
+    -- Hookfunction path already has clean args, no stripping needed
+    if not isHookFunction then
+        table.remove(args, 1)
+    end
     if methodName:lower() == "fireserver" and not (blacklist[remote] or blacklist[remote.Name]) then
-        if isHookFunction then
-            table.remove(args, 1)
-        end
         debugLog("HANDLER", "Logging FireServer event for: " .. tostring(remote.Name))
         bindableHandler("event", remote.Name, genScript(remote, unpack(args)), remote, functionInfoStr, (blocklist[remote] or blocklist[remote.Name]))
     elseif methodName:lower() == "invokeserver" and not (blacklist[remote] or blacklist[remote.Name]) then
-        if isHookFunction then
-            table.remove(args, 1)
-        end
         debugLog("HANDLER", "Logging InvokeServer function for: " .. tostring(remote.Name))
         bindableHandler("function", remote.Name, genScript(remote, unpack(args)), remote, functionInfoStr, (blocklist[remote] or blocklist[remote.Name]))
     else
@@ -1454,13 +1453,21 @@ end
 local newnamecall = newcclosure(function(self, ...)
     local args = {...}
     local methodName = getnamecallmethod()
+    -- Fallback: detect method from instance type if getnamecallmethod returns empty/nil
+    if (not methodName or methodName == "") and typeof(self) == "Instance" then
+        if self:IsA("RemoteEvent") then
+            methodName = "FireServer"
+        elseif self:IsA("RemoteFunction") then
+            methodName = "InvokeServer"
+        end
+    end
     local func
     if debug and debug.getinfo then
         pcall(function()
             func = debug.getinfo(3).func
         end)
     end
-    if methodName and typeof(methodName) == "string" then
+    if methodName and typeof(methodName) == "string" and methodName ~= "" then
         local lowerMethod = methodName:lower()
         if (lowerMethod == "invokeserver" or lowerMethod == "fireserver") and typeof(self) == "Instance" then
             local remote = self
@@ -1473,7 +1480,7 @@ local newnamecall = newcclosure(function(self, ...)
             end
         end
     end
-    if setnamecallmethod and methodName then
+    if setnamecallmethod and methodName and methodName ~= "" then
         setnamecallmethod(methodName)
     end
     return original(self, ...)
@@ -1487,33 +1494,68 @@ local newInvokeServer = newcclosure(function(...) if hookRemote("InvokeServer", 
 function toggleSpy()
     debugLog("TOGGLE", "toggleSpy called, current toggle=" .. tostring(toggle))
     if not toggle then
+        local hooked = false
+        -- Method 1: hookmetamethod (preferred)
         if hookmetamethod then
             debugLog("TOGGLE", "Using hookmetamethod to hook __namecall")
-            if not original then
-                original = hookmetamethod(game, "__namecall", newnamecall)
+            local ok, result = pcall(function()
+                if not original then
+                    original = hookmetamethod(game, "__namecall", newnamecall)
+                else
+                    hookmetamethod(game, "__namecall", newnamecall)
+                end
+            end)
+            if ok then
+                hooked = true
+                debugLog("TOGGLE", "hookmetamethod succeeded, original=" .. tostring(original ~= nil))
             else
-                hookmetamethod(game, "__namecall", newnamecall)
+                debugLog("TOGGLE", "hookmetamethod FAILED: " .. tostring(result))
             end
-        elseif gm then
+        end
+        -- Method 2: rawmetatable
+        if not hooked and gm then
             debugLog("TOGGLE", "Using rawmetatable to hook __namecall")
             pcall(setreadonly, gm, false)
             if not original then
                 original = gm.__namecall
                 if not original then
-                    debugLog("TOGGLE", "ERROR: namecall method not found!")
-                    rconsoleprint("SerndevRBLXSpyV1: namecall method not found!\n")
-                    onToggleButtonClick()
-                    return
+                    debugLog("TOGGLE", "ERROR: namecall method not found in metatable")
                 end
             end
-            gm.__namecall = newnamecall
-        else
-            debugLog("TOGGLE", "WARNING: No hooking method available (no hookmetamethod, no rawmetatable)")
+            if original then
+                gm.__namecall = newnamecall
+                hooked = true
+                debugLog("TOGGLE", "rawmetatable hook succeeded")
+            end
         end
-        debugLog("TOGGLE", "Spy ENABLED")
+        -- Method 3: hookfunction on FireServer/InvokeServer directly (fallback)
+        if not hooked or not original then
+            debugLog("TOGGLE", "Attempting hookfunction fallback on FireServer/InvokeServer")
+            if typeof(hookfunction) == "function" then
+                local okE, resE = pcall(function()
+                    originalEvent = hookfunction(Instance.new("RemoteEvent").FireServer, newFireServer)
+                end)
+                local okF, resF = pcall(function()
+                    originalFunction = hookfunction(Instance.new("RemoteFunction").InvokeServer, newInvokeServer)
+                end)
+                if okE or okF then
+                    hooked = true
+                    debugLog("TOGGLE", "hookfunction fallback succeeded (Event=" .. tostring(okE) .. ", Function=" .. tostring(okF) .. ")")
+                else
+                    debugLog("TOGGLE", "hookfunction fallback FAILED: E=" .. tostring(resE) .. " F=" .. tostring(resF))
+                end
+            else
+                debugLog("TOGGLE", "hookfunction not available for fallback")
+            end
+        end
+        if not hooked then
+            debugLog("TOGGLE", "CRITICAL: No hooking method worked! Events will NOT be intercepted.")
+            rconsoleprint("SerndevRBLXSpyV1: No hooking method available!\n")
+        end
+        debugLog("TOGGLE", "Spy ENABLED (hooked=" .. tostring(hooked) .. ")")
     else
         if hookmetamethod and original then
-            hookmetamethod(game, "__namecall", original)
+            pcall(hookmetamethod, game, "__namecall", original)
         elseif gm and original then
             pcall(setreadonly, gm, false)
             gm.__namecall = original
@@ -1522,7 +1564,7 @@ function toggleSpy()
     end
 end
 
---- Toggles between the two remotespy methods (hookfunction currently = disabled)
+--- Toggles between the two remotespy methods
 function toggleSpyMethod()
     toggleSpy()
     toggle = not toggle
@@ -1601,6 +1643,20 @@ if not _G.SimpleSpyExecuted then
         end)()
         schedulerconnect = RunService.Heartbeat:Connect(taskscheduler)
         debugLog("INIT", "SerndevRBLXSpyV1 initialized successfully, toggle=" .. tostring(toggle))
+        -- Show startup status in codebox so user can see if spy is active
+        local statusLines = {}
+        table.insert(statusLines, "-- SerndevRBLXSpyV1 Status Report --")
+        table.insert(statusLines, "-- Spy Active: " .. tostring(toggle))
+        table.insert(statusLines, "-- hookmetamethod: " .. tostring(hookmetamethod ~= nil))
+        table.insert(statusLines, "-- getrawmetatable: " .. tostring(getrawmetatable ~= nil))
+        table.insert(statusLines, "-- hookfunction: " .. tostring(typeof(hookfunction) == "function"))
+        table.insert(statusLines, "-- getnamecallmethod: " .. tostring(getnamecallmethod ~= nil and tostring(getnamecallmethod) ~= tostring(function() return "" end)))
+        table.insert(statusLines, "-- newcclosure: " .. tostring(newcclosure ~= nil))
+        table.insert(statusLines, "-- original namecall saved: " .. tostring(original ~= nil))
+        table.insert(statusLines, "--")
+        table.insert(statusLines, "-- Waiting for remote events...")
+        table.insert(statusLines, "-- Enable debug: _G.SimpleSpyDebug = true")
+        codebox:setRaw(table.concat(statusLines, "\n"))
     end)
     if succeeded then
         _G.SimpleSpyExecuted = true
